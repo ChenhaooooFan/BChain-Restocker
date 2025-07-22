@@ -20,6 +20,9 @@ if consumption_file and inventory_file:
     consumption_df = pd.read_csv(consumption_file)
     inventory_df = pd.read_csv(inventory_file)
 
+    # 检查列名是否标准化
+    inventory_df.columns = inventory_df.columns.str.strip()
+
     # 预处理耗材消耗数据
     consumption_df['日期'] = pd.to_datetime(consumption_df['日期'])
     consumption_df = consumption_df.sort_values('日期')
@@ -62,13 +65,17 @@ if consumption_file and inventory_file:
     }
 
     # 添加库存合计
-    summary_df['库存合计'] = summary_df['Item'].map(
-        lambda x: inventory_df.loc[
-            inventory_df['耗材物品'] == item_map[x], ['在仓数量', '在途数量']
-        ].sum(axis=1).values[0] if not inventory_df.loc[
-            inventory_df['耗材物品'] == item_map[x]
-        ].empty else 0
-    )
+    def get_stock_total(material_name):
+        try:
+            row = inventory_df.loc[inventory_df['耗材物品'] == material_name]
+            if not row.empty:
+                return row[['在仓数量', '在途数量']].iloc[0].sum()
+            else:
+                return 0
+        except KeyError:
+            return 0
+
+    summary_df['库存合计'] = summary_df['Item'].map(lambda x: get_stock_total(item_map.get(x, x)))
 
     # 判断是否需要补货
     summary_df['需补货'] = summary_df['Restock Qty'] > summary_df['库存合计']
