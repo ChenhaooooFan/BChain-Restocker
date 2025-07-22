@@ -87,7 +87,8 @@ if consumption_file and inventory_file:
     ax.bar([i - 0.2 for i in x], summary_df['Week1 Total'], width=0.4, label=f"{date_start} - {date_split}", color='gray')
     ax.bar([i + 0.2 for i in x], summary_df['Week2 Total'], width=0.4, label=f"{date_split} - {date_end}", color='skyblue')
     ax.set_xticks(list(x))
-    ax.set_xticklabels(summary_df['Item'], fontproperties="DejaVu Sans")
+    display_labels = ['Set of 5', 'Thank You Card', 'Airplane Bag', 'Influencer Note', 'Promo Card']
+    ax.set_xticklabels(display_labels)
     ax.set_ylabel("Quantity")
     ax.set_title(f"Total Usage Comparison: {date_start} - {date_end}")
     ax.legend()
