@@ -2,7 +2,6 @@ import streamlit as st
 import pandas as pd
 import datetime
 import matplotlib.pyplot as plt
-import seaborn as sns
 
 st.title("B-chain Restocking Assistant")
 
