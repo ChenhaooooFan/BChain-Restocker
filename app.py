@@ -11,9 +11,9 @@ inventory_file = st.file_uploader("Upload inventory data", type=["csv"])
 
 # User parameters
 daily_avg_days = st.number_input("Days to calculate daily average (e.g. 14)", min_value=1, max_value=30, value=14)
-production_days = st.number_input("Production time (days)", min_value=0, value=8)
-shipping_days = st.number_input("Shipping time (days)", min_value=0, value=15)
-safety_days = st.number_input("Safety stock buffer (days)", min_value=0, value=12)
+production_days = st.number_input("Production time (days)", min_value=0, value=10)
+shipping_days = st.number_input("Shipping time (days)", min_value=0, value=25)
+safety_days = st.number_input("Safety stock buffer (days)", min_value=0, value=30)
 total_days = production_days + shipping_days + safety_days
 
 if consumption_file and inventory_file:
