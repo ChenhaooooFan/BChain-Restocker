@@ -86,19 +86,23 @@ if consumption_file and inventory_file:
     st.subheader("补货建议表")
     st.dataframe(summary_df[['Item', 'Restock Qty', '库存合计', '需补货', '建议补货量']])
 
-    # 趋势图展示
-    st.subheader("耗材使用趋势图（过去28天）")
-    melted_df = recent_28_days.melt(id_vars='日期', 
-                                    value_vars=['五件套消耗', '感谢卡消耗', '飞机袋消耗', '达人信消耗'], 
-                                    var_name='耗材', 
-                                    value_name='数量')
+# 用条形图展示这两周 vs 上两周
+    st.subheader("耗材使用对比图（两周汇总）")
+    for idx, row in summary_df.iterrows():
+        item = row['Item']
+        week1_value = row['Week1 Total']
+        week2_value = row['Week2 Total']
+        date_start = recent_28_days.iloc[0]['日期'].strftime("%Y-%m-%d")
+        date_split = recent_28_days.iloc[14]['日期'].strftime("%Y-%m-%d")
+        date_end = recent_28_days.iloc[-1]['日期'].strftime("%Y-%m-%d")
 
-    for item in melted_df['耗材'].unique():
-        item_data = melted_df[melted_df['耗材'] == item]
         fig, ax = plt.subplots()
-        ax.plot(item_data['日期'], item_data['数量'], marker='o')
-        ax.set_title(f"{item} - 最近28天每日消耗趋势")
-        ax.set_xlabel("日期")
+        ax.bar(['前14天', '最近14天'], [week1_value, week2_value], color=['gray', 'skyblue'])
+        ax.set_title(f"{item} - 两周期总消耗对比")
         ax.set_ylabel("数量")
-        ax.grid(True)
         st.pyplot(fig)
+
+        # 文本总结
+        direction = "增长" if week2_value > week1_value else ("下降" if week2_value < week1_value else "持平")
+        change_pct = abs((week2_value - week1_value) / week1_value * 100) if week1_value else 0
+        st.markdown(f"**{item}：**\n- {date_start} 至 {date_split} 消耗总量为 {week1_value}。\n- {date_split} 至 {date_end} 消耗总量为 {week2_value}。\n- 相比前14天，本期消耗**{direction} {change_pct:.2f}%**。")
