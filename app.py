@@ -27,11 +27,11 @@ if consumption_file and inventory_file:
     week1 = recent_28_days.iloc[:14]
     week2 = recent_28_days.iloc[14:]
 
-    week1_totals = week1[['五件套消耗', '感谢卡消耗', '飞机袋消耗', '达人信消耗']].sum()
-    week2_totals = week2[['五件套消耗', '感谢卡消耗', '飞机袋消耗', '达人信消耗']].sum()
+    week1_totals = week1[['五件套消耗', '感谢卡消耗', '飞机袋消耗', '达人信消耗', '引流卡消耗']].sum()
+    week2_totals = week2[['五件套消耗', '感谢卡消耗', '飞机袋消耗', '达人信消耗', '引流卡消耗']].sum()
 
     summary_df = pd.DataFrame({
-        'Item': ['五件套', '感谢卡', '飞机袋', '达人信'],
+        'Item': ['五件套', '感谢卡', '飞机袋', '达人信', '引流卡'],
         'Week1 Total': week1_totals.values,
         'Week2 Total': week2_totals.values
     })
@@ -53,7 +53,8 @@ if consumption_file and inventory_file:
         '五件套': '五件套',
         '感谢卡': '感谢卡',
         '飞机袋': '飞机袋',
-        '达人信': '达人信'
+        '达人信': '达人信',
+        '引流卡': '引流卡'
     }
 
     def get_stock_total(material_name):
@@ -86,7 +87,7 @@ if consumption_file and inventory_file:
     ax.bar([i - 0.2 for i in x], summary_df['Week1 Total'], width=0.4, label=f"{date_start} - {date_split}", color='gray')
     ax.bar([i + 0.2 for i in x], summary_df['Week2 Total'], width=0.4, label=f"{date_split} - {date_end}", color='skyblue')
     ax.set_xticks(list(x))
-    ax.set_xticklabels(summary_df['Item'])
+    ax.set_xticklabels(summary_df['Item'], fontproperties="DejaVu Sans")
     ax.set_ylabel("Quantity")
     ax.set_title(f"Total Usage Comparison: {date_start} - {date_end}")
     ax.legend()
