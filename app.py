@@ -86,7 +86,7 @@ if consumption_file and inventory_file:
     st.subheader("补货建议表")
     st.dataframe(summary_df[['Item', 'Restock Qty', '库存合计', '需补货', '建议补货量']])
 
-# 用条形图展示这两周 vs 上两周
+    # 用条形图展示这两周 vs 上两周
     st.subheader("耗材使用对比图（两周汇总）")
     for idx, row in summary_df.iterrows():
         item = row['Item']
@@ -98,7 +98,7 @@ if consumption_file and inventory_file:
 
         fig, ax = plt.subplots()
         ax.bar(['前14天', '最近14天'], [week1_value, week2_value], color=['gray', 'skyblue'])
-        ax.set_title(f"{item} - 两周期总消耗对比")
+        ax.set_title(f"{item}（{date_start} - {date_end}）两周期总消耗对比", fontsize=12)
         ax.set_ylabel("数量")
         st.pyplot(fig)
 
@@ -106,3 +106,4 @@ if consumption_file and inventory_file:
         direction = "增长" if week2_value > week1_value else ("下降" if week2_value < week1_value else "持平")
         change_pct = abs((week2_value - week1_value) / week1_value * 100) if week1_value else 0
         st.markdown(f"**{item}：**\n- {date_start} 至 {date_split} 消耗总量为 {week1_value}。\n- {date_split} 至 {date_end} 消耗总量为 {week2_value}。\n- 相比前14天，本期消耗**{direction} {change_pct:.2f}%**。")
+
